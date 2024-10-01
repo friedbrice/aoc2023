@@ -1,0 +1,143 @@
+cabal-version: 3.0
+name:          aoc2023
+version:       0.1.0.0
+author:        Daniel Brice
+maintainer:    danielbrice@gmail.com
+copyright:     2024 Daniel Brice
+license:       BSD-3-Clause
+license-file:  LICENSE
+build-type:    Simple
+
+source-repository head
+  type:     git
+  location: https://github.com/friedbrice/aoc2023
+
+common common-opts
+  default-language:   GHC2024
+  ghc-options:
+    -Wall -Wcompat -Widentities -Wincomplete-record-updates
+    -Wincomplete-uni-patterns -Wmissing-home-modules -Wpartial-fields
+    -Wredundant-constraints
+
+  build-depends:      base >=4.20 && <5
+  default-extensions:
+    BlockArguments
+    DerivingVia
+    DuplicateRecordFields
+    FunctionalDependencies
+    NoFieldSelectors
+    NoImplicitPrelude
+    OverloadedRecordDot
+    OverloadedStrings
+    RecordWildCards
+    ViewPatterns
+
+common prod-opts
+  import:      common-opts
+  ghc-options:
+    -O2 -Werror -threaded -rtsopts "-with-rtsopts=-N -A64m -n4m"
+
+common dev-opts
+  import:             common-opts
+  default-extensions: PartialTypeSignatures
+  ghc-options:
+    -O0 -fwrite-ide-info -hiedir .hiefiles -fhelpful-errors
+    -fdefer-type-errors -fno-defer-typed-holes
+    -Werror=deferred-type-errors
+    -Werror=deferred-out-of-scope-variables -Wno-missing-home-modules
+
+common lib-deps
+  build-depends:
+    , aeson
+    , bytestring
+    , cassava
+    , containers
+    , stm
+    , text
+
+common test-deps
+  import:             lib-deps
+  build-tool-depends: hspec-discover:hspec-discover
+  build-depends:
+    , hspec
+    , process
+    , silently
+
+library
+  import:          prod-opts
+  hs-source-dirs:  src/aoc2023
+  exposed-modules: Aoc2023
+  build-depends:   aoc2023-lib
+
+executable aoc2023-exe
+  import:         prod-opts
+  hs-source-dirs: src/aoc2023-exe
+  main-is:        Main.hs
+  build-depends:  aoc2023
+
+test-suite aoc2023-test-exe
+  import:         prod-opts
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: src/aoc2023-test-exe
+  main-is:        Main.hs
+  build-depends:  aoc2023-test
+
+library aoc2023-lib
+  import:          prod-opts
+  import:          lib-deps
+  hs-source-dirs:  src/aoc2023-lib
+
+  -- cabal-fmt: expand src/aoc2023-lib
+  exposed-modules:
+    Ante
+    Aoc2023.Day1
+    Aoc2023.Day2
+    Aoc2023.Day3
+    Aoc2023.Day4
+    Aoc2023.Day5
+    Aoc2023.Solution
+    Aoc2023.Types
+
+library aoc2023-test
+  import:          prod-opts
+  import:          test-deps
+  hs-source-dirs:  src/aoc2023-test
+  build-depends:   aoc2023-lib
+
+  -- cabal-fmt: expand src/aoc2023-test
+  exposed-modules:
+    Ante.Test
+    Aoc2023.Day1Spec
+    Aoc2023.Day2Spec
+    Aoc2023.Day3Spec
+    Aoc2023.Day4Spec
+    Aoc2023.Day5Spec
+    Spec
+    TestMain
+
+library aoc2023-dev
+  import:          dev-opts
+  import:          test-deps
+  hs-source-dirs:  src/aoc2023 src/aoc2023-lib src/aoc2023-test
+
+  -- cabal-fmt: expand src/aoc2023
+  -- cabal-fmt: expand src/aoc2023-lib
+  -- cabal-fmt: expand src/aoc2023-test
+  exposed-modules:
+    Ante
+    Ante.Test
+    Aoc2023
+    Aoc2023.Day1
+    Aoc2023.Day1Spec
+    Aoc2023.Day2
+    Aoc2023.Day2Spec
+    Aoc2023.Day3
+    Aoc2023.Day3Spec
+    Aoc2023.Day4
+    Aoc2023.Day4Spec
+    Aoc2023.Day5
+    Aoc2023.Day5Spec
+    Aoc2023.Solution
+    Aoc2023.Types
+    Spec
+    TestMain
