@@ -29,6 +29,7 @@ common common-opts
     NoImplicitPrelude
     OverloadedRecordDot
     OverloadedStrings
+    QuantifiedConstraints
     RecordWildCards
     ViewPatterns
 
@@ -52,8 +53,11 @@ common lib-deps
     , bytestring
     , cassava
     , containers
+    , mtl
+    , parser-combinators
     , stm
     , text
+    , transformers
 
 common test-deps
   import:             lib-deps
@@ -97,6 +101,7 @@ library aoc2023-lib
     Aoc2023.Day5
     Aoc2023.Solution
     Aoc2023.Types
+    Parser
 
 library aoc2023-test
   import:          prod-opts
@@ -139,5 +144,6 @@ library aoc2023-dev
     Aoc2023.Day5Spec
     Aoc2023.Solution
     Aoc2023.Types
+    Parser
     Spec
     TestMain
